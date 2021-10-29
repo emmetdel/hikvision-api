@@ -1,0 +1,6 @@
+.idea
+node_modules
+dist
+test/.jest.setup.js
+yarn-*.log
+*.txt
