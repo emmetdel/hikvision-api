@@ -4,11 +4,6 @@ import { Endpoint } from '../models/alarm';
 import { XmlHandler } from '../utils/XmlHandler';
 import { Base, BaseConfig } from './Base';
 
-import * as stream from 'stream';
-import { promisify } from 'util';
-
-const finished = promisify(stream.finished);
-
 export class Alarm extends Base {
 
   constructor(config: BaseConfig) {
@@ -44,21 +39,11 @@ export class Alarm extends Base {
   public makeRequest<T>(endpoint: string, json: boolean, method: AxiosRequestConfig['method'], data?: AxiosRequestConfig['data']) {
     try {
       const url = this.buildUrl(endpoint, json);
-      console.debug(url)
       return this.request.request<T>({ url, method, data });
     } catch (error) {
       console.error(error);
     }
   }
-
-  // private async streamToString(stream: any) {
-  //   const chunks: Array<Buffer> = [];
-  //   return new Promise((resolve, reject) => {
-  //     stream.on('data', (chunk: any) => chunks.push(Buffer.from(chunk)));
-  //     stream.on('error', (err: any) => reject(err));
-  //     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-  //   })
-  // }
 
   public async getAlertStream(): Promise<void> {
 
@@ -68,11 +53,9 @@ export class Alarm extends Base {
         let prev = "";
         stream.on('data', (chunk: any) => {
           const stringContent = Buffer.from(chunk).toString('utf8');
-          // console.debug(stringContent);
           const arr = stringContent.match('([^}]+})') || [""];
           const current = arr[0];
           if (current !== prev){
-            console.debug(current);
             prev = current;
           }
         });

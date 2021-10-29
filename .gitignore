@@ -4,3 +4,4 @@ dist
 test/.jest.setup.js
 yarn-*.log
 *.txt
+.env
